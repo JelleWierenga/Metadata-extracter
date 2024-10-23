@@ -1,23 +1,26 @@
+import os
 from PIL import Image
 from PIL.ExifTags import TAGS
 from prettytable import PrettyTable
-
-image_filename = "image.jpg"
 
 table = PrettyTable()
 
 table.field_names = ["MetaTags", "Values"]
 
-my_image = Image.open(image_filename)
+folder = "./images"
+for image in os.listdir(folder):
+    path = os.path.join(folder, image)
 
-img_exif_data = my_image.getexif()
+    my_image = Image.open(path)
 
-for id in img_exif_data:
-    tag_name = TAGS.get(id, id)
-    data = img_exif_data.get(id)
-    if isinstance(data, bytes):
-        data = data.decode()
+    img_exif_data = my_image.getexif()
 
-    table.add_row([tag_name, data])
+    for id in img_exif_data:
+        tag_name = TAGS.get(id, id)
+        data = img_exif_data.get(id)
+        if isinstance(data, bytes):
+            data = data.decode()
 
-print(table)
+        table.add_row([tag_name, data])
+
+    print(table)
